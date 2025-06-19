@@ -1,26 +1,32 @@
 import FormInput from "../../components/form/FormInput"
 
 import { createAlert } from "../../util/createAlert"
-import { useForm } from "react-hook-form"
+import { useForm, useFormState } from "react-hook-form"
 import axios from 'axios'
+import Butttons from "../../components/form/Butttons"
 function Register() {
   //JS
-  const { handleSubmit, register } = useForm()
+  const { handleSubmit, register, formState } = useForm();
+  const { isSubmitting } = formState;
 
-  const hdlSubmit = async (value) => {
-    console.log(value)
-    createAlert("success", "Register Success", "You ready to login")
+const hdlSubmit = async (value) => {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
     try {
-      const res = await axios.post('http://localhost:8000/auth/register', value)
-      console / log(res)
+      const res = await axios.post(
+        "http://localhost:8000/auth/register",
+        value
+      );
+      console.log(res);
+      createAlert("success", "Register Success", "You ready to login")
+
     } catch (error) {
       console.log(error)
       createAlert("info",
         "Register Failed",
         error.response?.data?.message);
-
     }
-  }
+  };
 
 
   return (
@@ -41,7 +47,7 @@ function Register() {
             <FormInput register={register} name="confirmPassword" />
           </div>
           <div className="flex justify-center mt-4">
-            <button type="submit" className="bg-slate-600 text-white p-1 rounded-md">Register</button>
+            <Butttons Label="Register" isSubmitting={isSubmitting} />
           </div>
 
         </form>
